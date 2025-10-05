@@ -1,11 +1,12 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { HackathonForm } from '../../components/forms/HackathonForm';
 import { Hackathon } from '../../types';
-import { mockHackathons } from '../../data/mockData';
 import { useAuth } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 import { ArrowLeft } from 'lucide-react';
+import axios from 'axios';
 
 export const HackathonFormPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,17 +17,22 @@ export const HackathonFormPage: React.FC = () => {
   const isEditing = !!id;
 
   useEffect(() => {
-    if (isEditing) {
-      setIsLoading(true);
-      const hackathonData = mockHackathons.find(h => h.id === id);
-      if (hackathonData) {
-        setHackathon(hackathonData);
-      } else {
-        toast.error('Hackathon not found.');
-        navigate('/admin');
+    const fetchHackathon = async () => {
+      if (isEditing && id) {
+        setIsLoading(true);
+        try {
+          const res = await axios.get(`/api/hackathons/${id}`);
+          setHackathon(res.data);
+        } catch (error) {
+          toast.error('Hackathon not found.');
+          navigate('/admin');
+        } finally {
+          setIsLoading(false);
+        }
       }
-      setIsLoading(false);
-    }
+    };
+
+    fetchHackathon();
   }, [id, isEditing, navigate]);
 
   const handleSubmit = async (data: Partial<Hackathon>) => {
@@ -36,18 +42,30 @@ export const HackathonFormPage: React.FC = () => {
     }
 
     const toastId = toast.loading(isEditing ? 'Updating hackathon...' : 'Creating hackathon...');
-    setTimeout(() => {
+    
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    };
+
+    try {
       if (isEditing && id) {
-        console.log('Updating hackathon', id, data);
+        await axios.put(`/api/hackathons/${id}`, data, config);
       } else {
-        console.log('Creating hackathon', data);
+        await axios.post('/api/hackathons', data, config);
       }
       toast.success(`Hackathon ${isEditing ? 'updated' : 'created'} successfully.`, { id: toastId });
       navigate('/admin');
-    }, 1000);
+    } catch (err: any) {
+        const errorMsg = err.response?.data?.message || err.message || `Failed to ${isEditing ? 'update' : 'create'} hackathon.`;
+        toast.error(errorMsg, { id: toastId });
+    }
   };
 
-  if (isLoading) {
+  if (isLoading && isEditing) {
     return <div className="text-center py-12">Loading form...</div>;
   }
 

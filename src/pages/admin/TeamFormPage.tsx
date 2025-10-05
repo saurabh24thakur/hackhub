@@ -1,11 +1,12 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import { TeamForm } from '../../components/forms/TeamForm';
 import { Team } from '../../types';
-import { mockTeams } from '../../data/mockData';
 import { useAuth } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 import { ArrowLeft } from 'lucide-react';
+import axios from 'axios';
 
 export const TeamFormPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,40 +21,59 @@ export const TeamFormPage: React.FC = () => {
   const hackathonId = query.get('hackathonId');
 
   useEffect(() => {
-    if (isEditing && id && hackathonId) {
-      setIsLoading(true);
-      const teamData = mockTeams.find(t => t.id === id && t.hackathonId === hackathonId);
-      if (teamData) {
-        setTeam(teamData);
-      } else {
-        toast.error('Team not found.');
-        navigate('/admin');
+    const fetchTeam = async () => {
+      if (isEditing && id) {
+        setIsLoading(true);
+        try {
+          const res = await axios.get(`/api/teams/${id}`);
+          setTeam(res.data);
+        } catch (error) {
+          toast.error('Team not found.');
+          navigate('/admin');
+        } finally {
+          setIsLoading(false);
+        }
       }
-      setIsLoading(false);
-    }
-  }, [id, isEditing, navigate, hackathonId]);
+    };
+
+    fetchTeam();
+  }, [id, isEditing, navigate]);
 
   const handleSubmit = async (data: Partial<Team>) => {
     if (!user) {
       toast.error('You must be logged in.');
       return;
     }
-    
-    if (!hackathonId) {
+
+    if (!hackathonId && !isEditing) {
       toast.error('Hackathon ID is missing.');
       return;
     }
 
     const toastId = toast.loading(isEditing ? 'Updating team...' : 'Creating team...');
-    setTimeout(() => {
+
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    };
+
+    const teamData = { ...data, hackathonId: isEditing ? team?.hackathonId : hackathonId };
+
+    try {
       if (isEditing && id) {
-        console.log('Updating team', id, data);
+        await axios.put(`/api/teams/${id}`, teamData, config);
       } else {
-        console.log('Creating team', data);
+        await axios.post('/api/teams', teamData, config);
       }
       toast.success(`Team ${isEditing ? 'updated' : 'created'} successfully.`, { id: toastId });
       navigate('/admin');
-    }, 1000);
+    } catch (err: any) {
+        const errorMsg = err.response?.data?.message || err.message || `Failed to ${isEditing ? 'update' : 'create'} team.`;
+        toast.error(errorMsg, { id: toastId });
+    }
   };
 
   if (isLoading && isEditing) {

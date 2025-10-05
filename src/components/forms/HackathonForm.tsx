@@ -11,7 +11,7 @@ interface HackathonFormProps {
 
 export const HackathonForm: React.FC<HackathonFormProps> = ({ hackathon, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
-    name: hackathon?.name || '',
+    title: hackathon?.title || '',
     description: hackathon?.description || '',
     startDate: hackathon?.startDate ? new Date(hackathon.startDate).toISOString().split('T')[0] : '',
     endDate: hackathon?.endDate ? new Date(hackathon.endDate).toISOString().split('T')[0] : '',
@@ -38,9 +38,9 @@ export const HackathonForm: React.FC<HackathonFormProps> = ({ hackathon, onSubmi
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <Input
-        label="Hackathon Name"
-        name="name"
-        value={formData.name}
+        label="Hackathon Title"
+        name="title"
+        value={formData.title}
         onChange={handleChange}
         required
       />

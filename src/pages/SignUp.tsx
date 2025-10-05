@@ -1,9 +1,10 @@
+
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
-import { Code2, MailCheck } from 'lucide-react';
+import { Code2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const SignUp: React.FC = () => {
@@ -11,55 +12,27 @@ export const SignUp: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const { signUp } = useAuth();
+  const { signUp, login, isLoading } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setIsLoading(true);
-    
+
     try {
       await signUp(name, email, password);
-      setIsSuccess(true);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message || 'Failed to create account. Please try again.');
+      await login(email, password);
+      navigate('/hackathons');
+    } catch (err: any) {
+      if (err.response && err.response.data) {
+        setError(err.response.data);
+      } else if (err.message) {
+        setError(err.message);
       } else {
         setError('An unknown error occurred. Please try again.');
       }
-    } finally {
-      setIsLoading(false);
     }
   };
-
-  if (isSuccess) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="sm:mx-auto sm:w-full sm:max-w-md"
-        >
-          <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 text-center">
-            <MailCheck className="w-16 h-16 text-green-500 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              Account created successfully!
-            </h2>
-            <p className="text-gray-600">
-              You are now logged in.
-            </p>
-            <div className="mt-6">
-              <Link to="/hackathons" className="font-medium text-blue-600 hover:text-blue-500">
-                Go to Hackathons
-              </Link>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
