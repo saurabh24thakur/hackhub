@@ -66,17 +66,17 @@ export const HackathonFormPage: React.FC = () => {
   };
 
   if (isLoading && isEditing) {
-    return <div className="text-center py-12">Loading form...</div>;
+    return <div className="text-center py-12 dark:text-dark-text">Loading form...</div>;
   }
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <Link to="/admin" className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-6">
+      <Link to="/admin" className="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 mb-6">
         <ArrowLeft className="w-4 h-4 mr-2" />
         Back to Dashboard
       </Link>
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">
+      <div className="bg-white dark:bg-dark-card rounded-lg shadow-md p-6">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-dark-text mb-6">
           {isEditing ? 'Edit Hackathon' : 'Create New Hackathon'}
         </h1>
         <HackathonForm
