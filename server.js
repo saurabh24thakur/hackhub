@@ -9,9 +9,7 @@ const userRoutes = require('./api/routes/userRoutes');
 const app = express();
 
 const corsOptions = {
-  origin: (origin, callback) => {
-    callback(null, origin);
-  },
+  origin: ['http://localhost:5173', 'https://hackhub-3nkp.vercel.app'],
   credentials: true,
 };
 
