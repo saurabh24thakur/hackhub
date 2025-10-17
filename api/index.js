@@ -1,22 +1,27 @@
 
 const express = require('express');
 const dotenv = require('dotenv');
-const connectDB = require('./config/db.js');
+const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes.js');
 const hackathonRoutes = require('./routes/hackathonRoutes.js');
 const teamRoutes = require('./routes/teamRoutes.js');
 const userRoutes = require('./routes/userRoutes.js');
 
 dotenv.config();
-connectDB();
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://root:root@cluster0.x4yli1y.mongodb.net/hackathon_battalion', { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB Connected...'))
+  .catch(err => console.log(err));
 
 const app = express();
 
 app.use(express.json());
 
-app.use('/api/auth', authRoutes);
-app.use('/api/hackathons', hackathonRoutes);
-app.use('/api/teams', teamRoutes);
-app.use('/api/users', userRoutes);
+// Vercel handles the /api prefix, so we remove it from the routes here
+app.use('/auth', authRoutes);
+app.use('/hackathons', hackathonRoutes);
+app.use('/teams', teamRoutes);
+app.use('/users', userRoutes);
 
 module.exports = app;
