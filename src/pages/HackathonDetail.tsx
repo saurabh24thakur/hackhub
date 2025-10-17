@@ -53,6 +53,7 @@ export const HackathonDetail: React.FC = () => {
       return;
     }
     
+    setIsLoading(true);
     const toastId = toast.loading('Creating team...');
 
     try {
@@ -64,6 +65,8 @@ export const HackathonDetail: React.FC = () => {
       console.error('Failed to create team:', err);
       const errorMsg = err.response?.data?.message || 'Failed to create team. Please try again.';
       toast.error(errorMsg, { id: toastId });
+    } finally {
+      setIsLoading(false);
     }
   };
 

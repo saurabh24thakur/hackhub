@@ -50,6 +50,7 @@ export const TeamFormPage: React.FC = () => {
       return;
     }
 
+    setIsLoading(true);
     const toastId = toast.loading(isEditing ? 'Updating team...' : 'Creating team...');
 
     const token = localStorage.getItem('token');
@@ -73,6 +74,8 @@ export const TeamFormPage: React.FC = () => {
     } catch (err: any) {
         const errorMsg = err.response?.data?.message || err.message || `Failed to ${isEditing ? 'update' : 'create'} team.`;
         toast.error(errorMsg, { id: toastId });
+    } finally {
+      setIsLoading(false);
     }
   };
 

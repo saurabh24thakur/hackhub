@@ -46,6 +46,7 @@ export const AdminDashboard: React.FC = () => {
 
   const handleDeleteHackathon = async (id: string) => {
     if (confirm('Are you sure you want to delete this hackathon and all its teams?')) {
+      setIsLoading(true);
       const token = localStorage.getItem('token');
       const config = {
         headers: { Authorization: `Bearer ${token}` }
@@ -56,12 +57,15 @@ export const AdminDashboard: React.FC = () => {
         fetchData();
       } catch (error) {
         toast.error('Failed to delete hackathon.');
+      } finally {
+        setIsLoading(false);
       }
     }
   };
 
   const handleDeleteTeam = async (teamId: string) => {
     if (confirm('Are you sure you want to delete this team?')) {
+      setIsLoading(true);
       const token = localStorage.getItem('token');
       const config = {
         headers: { Authorization: `Bearer ${token}` }
@@ -72,6 +76,8 @@ export const AdminDashboard: React.FC = () => {
         fetchData();
       } catch (error) {
         toast.error('Failed to delete team.');
+      } finally {
+        setIsLoading(false);
       }
     }
   };

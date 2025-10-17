@@ -41,6 +41,7 @@ export const HackathonFormPage: React.FC = () => {
       return;
     }
 
+    setIsLoading(true);
     const toastId = toast.loading(isEditing ? 'Updating hackathon...' : 'Creating hackathon...');
     
     const token = localStorage.getItem('token');
@@ -62,6 +63,8 @@ export const HackathonFormPage: React.FC = () => {
     } catch (err: any) {
         const errorMsg = err.response?.data?.message || err.message || `Failed to ${isEditing ? 'update' : 'create'} hackathon.`;
         toast.error(errorMsg, { id: toastId });
+    } finally {
+      setIsLoading(false);
     }
   };
 

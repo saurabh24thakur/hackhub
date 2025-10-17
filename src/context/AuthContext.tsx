@@ -32,39 +32,48 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 }, []);
 
   const login = async (email: string, password: string) => {
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    });
+    setLoading(true);
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (!response.ok) {
-      throw new Error('Login failed');
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
+
+      const { token, user } = await response.json();
+
+      setUser(user);
+      setToken(token);
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('token', token);
+    } finally {
+      setLoading(false);
     }
-
-    const { token, user } = await response.json();
-
-    setUser(user);
-    setToken(token);
-    localStorage.setItem('user', JSON.stringify(user));
-    localStorage.setItem('token', token);
   };
 
   const signUp = async (name: string, email: string, password: string) => {
-    const response = await fetch('/api/auth/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name, email, password }),
-    });
+    setLoading(true);
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
 
-    if (!response.ok) {
-      throw new Error('Sign up failed');
+      if (!response.ok) {
+        throw new Error('Sign up failed');
+      }
+    } finally {
+      setLoading(false);
     }
-
   };
 
 

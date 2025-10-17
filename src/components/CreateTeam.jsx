@@ -13,7 +13,7 @@ const CreateTeam = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className=' dark:bg-dark-card'>
             <h3>Create New Team</h3>
             <input
                 type="text"

@@ -30,6 +30,7 @@ export const UserManagement: React.FC = () => {
   }, [token, authLoading]);
 
   const handleRoleChange = async (userId: string, newRole: string) => {
+    setLoading(true);
     try {
       if (token) {
         await updateUserRole(token, userId, newRole);
@@ -38,6 +39,8 @@ export const UserManagement: React.FC = () => {
       }
     } catch (error) {
       console.error('Failed to update user role', error);
+    } finally {
+      setLoading(false);
     }
   };
 

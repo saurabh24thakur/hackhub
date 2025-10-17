@@ -6,35 +6,69 @@ const AdminDashboard = () => {
     const [teams, setTeams] = useState([]);
     const [email, setEmail] = useState('');
     const [selectedTeam, setSelectedTeam] = useState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchTeams = async () => {
-            const { data } = await getTeams();
-            setTeams(data);
+            setLoading(true);
+            try {
+                const { data } = await getTeams();
+                setTeams(data);
+            } catch (error) {
+                console.error("Failed to fetch teams:", error);
+            } finally {
+                setLoading(false);
+            }
         };
         fetchTeams();
     }, []);
 
     const handleApprove = async (teamId, userId) => {
-        await approveRequest(teamId, userId);
-        const { data } = await getTeams();
-        setTeams(data);
+        setLoading(true);
+        try {
+            await approveRequest(teamId, userId);
+            const { data } = await getTeams();
+            setTeams(data);
+        } catch (error) {
+            console.error("Failed to approve request:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleDeny = async (teamId, userId) => {
-        await denyRequest(teamId, userId);
-        const { data } = await getTeams();
-        setTeams(data);
+        setLoading(true);
+        try {
+            await denyRequest(teamId, userId);
+            const { data } = await getTeams();
+            setTeams(data);
+        } catch (error) {
+            console.error("Failed to deny request:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleAddMember = async (e) => {
         e.preventDefault();
-        await addTeamMemberByEmail(selectedTeam, { email });
-        setEmail('');
-        setSelectedTeam('');
-        const { data } = await getTeams();
-        setTeams(data);
+        setLoading(true);
+        try {
+            await addTeamMemberByEmail(selectedTeam, { email });
+            setEmail('');
+            setSelectedTeam('');
+            const { data } = await getTeams();
+            setTeams(data);
+        } catch (error) {
+            console.error("Failed to add member:", error);
+        } finally {
+            setLoading(false);
+        }
     };
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
 
     return (
         <div>

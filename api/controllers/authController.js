@@ -13,6 +13,7 @@ const register = async (req, res) => {
 
     const userCount = await User.countDocuments();
     const role = userCount === 0 ? 'admin' : 'user';
+    
 
     // The password will be hashed by the pre-save hook in the User model
     const user = new User({ name, email, password, role });

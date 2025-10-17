@@ -14,16 +14,20 @@ const TeamManagementPage = () => {
     const { teamId } = useParams<{ teamId: string }>();
     const [team, setTeam] = useState<Team | null>(null);
     const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchTeam = async () => {
             if (teamId) {
+                setLoading(true);
                 try {
                     const fetchedTeam = await getTeam(teamId);
                     setTeam(fetchedTeam);
                 } catch (error) {
                     console.error("Failed to fetch team:", error);
                     setTeam(null);
+                } finally {
+                    setLoading(false);
                 }
             }
         };
@@ -33,29 +37,39 @@ const TeamManagementPage = () => {
 
     const handleAddMember = async (email: string) => {
         if (teamId) {
+            setLoading(true);
             try {
                 const updatedTeam = await addUserToTeam(teamId, email);
                 setTeam(updatedTeam);
                 setIsAddMemberModalOpen(false);
             } catch (error) {
                 console.error("Failed to add member:", error);
+            } finally {
+                setLoading(false);
             }
         }
     };
 
     const handleRemoveMember = async (userId: string) => {
         if (teamId) {
+            setLoading(true);
             try {
                 const updatedTeam = await removeUserFromTeam(teamId, userId);
                 setTeam(updatedTeam);
             } catch (error) {
                 console.error("Failed to remove member:", error);
+            } finally {
+                setLoading(false);
             }
         }
     };
 
-    if (!team) {
+    if (loading) {
         return <div className="text-center py-10 text-gray-900 dark:text-dark-text">Loading team details...</div>;
+    }
+
+    if (!team) {
+        return <div className="text-center py-10 text-gray-900 dark:text-dark-text">Team not found.</div>;
     }
     
     const canManage = user?.role === 'admin' || user?._id === team.leader?._id;

@@ -4,19 +4,39 @@ import { getTeams, requestToJoinTeam } from '../services/teamService';
 
 const TeamList = ({ user }) => {
     const [teams, setTeams] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchTeams = async () => {
-            const { data } = await getTeams();
-            setTeams(data);
+            setLoading(true);
+            try {
+                const { data } = await getTeams();
+                setTeams(data);
+            } catch (error) {
+                console.error("Failed to fetch teams:", error);
+            } finally {
+                setLoading(false);
+            }
         };
         fetchTeams();
     }, []);
 
     const handleRequestToJoin = async (teamId) => {
-        await requestToJoinTeam(teamId, user._id);
-        alert('Request sent!');
+        setLoading(true);
+        try {
+            await requestToJoinTeam(teamId, user._id);
+            alert('Request sent!');
+        } catch (error) {
+            console.error("Failed to send request:", error);
+        } finally {
+            setLoading(false);
+        }
     };
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
 
     return (
         <div>

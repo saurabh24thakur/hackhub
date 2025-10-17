@@ -51,13 +51,15 @@ export const TeamForm: React.FC<TeamFormProps> = ({ team, onSubmit, onCancel }) 
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6 dark:bg-dark-card">
+      
       <Input
         label="Team Name"
         name="name"
         value={formData.name}
         onChange={handleChange}
         required
+        className='dark:bg-dark-background dark:text-dark-text dark:border-dark-border'
       />
       
       <div>
@@ -69,7 +71,7 @@ export const TeamForm: React.FC<TeamFormProps> = ({ team, onSubmit, onCancel }) 
           value={formData.description}
           onChange={handleChange}
           rows={3}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 dark:bg-dark-background dark:text-dark-text dark:border-dark-border"
           required
         />
       </div>
@@ -79,6 +81,8 @@ export const TeamForm: React.FC<TeamFormProps> = ({ team, onSubmit, onCancel }) 
         name="project"
         value={formData.project}
         onChange={handleChange}
+        className='dark:bg-dark-background dark:text-dark-text dark:border-dark-border'
+
       />
       
       <div>
@@ -94,7 +98,8 @@ export const TeamForm: React.FC<TeamFormProps> = ({ team, onSubmit, onCancel }) 
         
         <div className="space-y-4">
           {members.map((member, index) => (
-            <div key={index} className="p-4 border border-gray-200 rounded-lg">
+            <div key={index}         className='dark:bg-dark-background dark:text-dark-text dark:border-dark-border'
+>
               <div className="flex items-center justify-between mb-3">
                 <h4 className="text-sm font-medium text-gray-900">Member {index + 1}</h4>
                 {members.length > 1 && (
