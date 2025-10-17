@@ -2,6 +2,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
+const cors = require('cors'); // Import cors
 const authRoutes = require('./routes/authRoutes.js');
 const hackathonRoutes = require('./routes/hackathonRoutes.js');
 const teamRoutes = require('./routes/teamRoutes.js');
@@ -15,6 +16,13 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://root:root@cluster0.x4yl
   .catch(err => console.log(err));
 
 const app = express();
+
+// Use CORS
+const corsOptions = {
+  origin: ['http://localhost:5173', 'https://hackhub-3nkp.vercel.app', 'https://hackhub-git-main-saurabh24thakurs-projects.vercel.app'],
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
