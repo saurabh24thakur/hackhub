@@ -1,3 +1,4 @@
+console.log('Server starting...');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -9,7 +10,15 @@ const userRoutes = require('./api/routes/userRoutes');
 const app = express();
 
 const corsOptions = {
-  origin: ['http://localhost:5173', 'https://hackhub-3nkp.vercel.app'],
+  origin: function (origin, callback) {
+    console.log('Request origin:', origin);
+    const allowedOrigins = ['http://localhost:5173', 'https://hackhub-3nkp.vercel.app'];
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 };
 
