@@ -58,7 +58,7 @@ export const SignUp: React.FC = () => {
         transition={{ delay: 0.1 }}
         className="mt-8 sm:mx-auto sm:w-full sm:max-w-md"
       >
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div className="bg-white dark:bg-dark-card py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <Input
               label="Full Name"
@@ -67,6 +67,8 @@ export const SignUp: React.FC = () => {
               onChange={(e) => setName(e.target.value)}
               required
               autoComplete="name"
+              className="dark:bg-dark-background dark:text-dark-text dark:border-dark-border"
+
             />
             <Input
               label="Email address"
@@ -75,6 +77,8 @@ export const SignUp: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
+              className="dark:bg-dark-background dark:text-dark-text dark:border-dark-border"
+
             />
             <Input
               label="Password"
@@ -83,6 +87,8 @@ export const SignUp: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="new-password"
+              className="dark:bg-dark-background dark:text-dark-text dark:border-dark-border"
+
             />
 
             {error && (
