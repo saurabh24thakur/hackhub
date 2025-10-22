@@ -169,10 +169,12 @@ export const HackathonDetail: React.FC = () => {
         >
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-dark-text">Participating Teams</h2>
-            <Button variant="primary" onClick={() => setIsModalOpen(true)}>
-              <Plus className="w-4 h-4 mr-2" />
-              Create Team
-            </Button>
+            {user?.role === 'admin' && (
+              <Button variant="primary" onClick={() => setIsModalOpen(true)}>
+                <Plus className="w-4 h-4 mr-2" />
+                Create Team
+              </Button>
+            )}
           </div>
           
           {teams.length > 0 ? (
