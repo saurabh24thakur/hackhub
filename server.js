@@ -12,7 +12,7 @@ const app = express();
 const corsOptions = {
   origin: function (origin, callback) {
     console.log('Request origin:', origin);
-    const allowedOrigins = ['http://localhost:5173', 'https://hackhub-dowe.vercel.app'];
+    const allowedOrigins = ['http://localhost:5173', 'https://hackhub-dowe.vercel.app', 'https://hackhubfinal.vercel.app'];
     if (allowedOrigins.includes(origin) || !origin) {
       callback(null, true);
     } else {
