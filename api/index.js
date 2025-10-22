@@ -19,7 +19,7 @@ const app = express();
 
 // Use CORS
 const corsOptions = {
-  origin: ['http://localhost:5173', 'https://hackhub-dowe.vercel.app', 'https://hackhub-git-main-saurabh24thakurs-projects.vercel.app'],
+  origin: ['http://localhost:5173'],
   credentials: true,
 };
 app.use(cors(corsOptions));
