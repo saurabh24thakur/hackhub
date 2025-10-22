@@ -100,9 +100,9 @@ export const SignUp: React.FC = () => {
               variant="primary"
               size="lg"
               className="w-full"
-              disabled={isLoading}
+              disabled={loading}
             >
-              {isLoading ? 'Creating account...' : 'Sign up'}
+              {loading ? 'Creating account...' : 'Sign up'}
             </Button>
           </form>
 
