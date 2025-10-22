@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { Hackathon } from '../types';
 
-const API_URL = '/api/hackathons';
+const API_URL = import.meta.env.VITE_API_BASE_URL + '/api/hackathons';
 
 const getAuthHeaders = () => {
     const token = localStorage.getItem('token');

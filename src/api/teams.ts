@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { Team, User } from '../types';
 
-const API_URL = '/api/teams';
+const API_URL = import.meta.env.VITE_API_BASE_URL + '/api/teams';
 
 const getAuthHeaders = () => {
     const token = localStorage.getItem('token');
